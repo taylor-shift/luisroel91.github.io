@@ -20,7 +20,7 @@ timezone: "America/Los_Angeles"
 
 title: "Backtrace" # the main title
 
-tagline: "Clarity in Code, Insight in Chaor" # it will display as the sub-title
+tagline: "Clarity in Code, Insight in Chaos" # it will display as the sub-title
 
 description: >- # used by seo meta and the atom feed
   A minimal, responsive and feature-rich Jekyll theme for technical writing.
