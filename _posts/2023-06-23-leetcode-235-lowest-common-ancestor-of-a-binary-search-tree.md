@@ -28,7 +28,7 @@ See how the output is 6, and how that node was the ancestor of the nodes holding
 
 This is what the `Lowest Common Ancestor` is, or `LCA` for short.
 
-To do this we'll use a variation of the `Depth First Search` algo to recurse along the tree until we find the node we're looking for...the one between the min/max values of the tree. Its extremely similar (or perhaps, it is) to `Binary Search`
+To do this we'll use a variation of the `Depth First Search` algo to recurse along the tree until we find the node we're looking for...the one between the min/max values of the tree. Its extremely similar (or perhaps, it is) to `Binary Search`.
 
 I've commented the code to make it easier to understand:
 
