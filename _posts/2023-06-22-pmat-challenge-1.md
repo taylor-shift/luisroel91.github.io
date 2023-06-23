@@ -20,7 +20,7 @@ The excercise has the following questions, let's answer them:
 
 ## Basic Static Analysis
 
-1. What is the SHA256 hash of the sample
+* What is the SHA256 hash of the sample
 
 Hashes serve as an easy way to 'fingerprint' malware without executing it.
 
@@ -30,13 +30,13 @@ There are several tools to get this info...but the simplest one is sha256sum.exe
 
 A more comprehensive one would be [PEStudio](https://www.winitor.com/), which I'll use to answer the question below.
 
-2. What architecture is this binary?
+* What architecture is this binary?
 
 ![more info with PEStudio]({{site.url}}/assets/img/pmat-challenge-1.md_files/Screenshot from 2023-06-22 18-16-46.png)
 
 The first bytes (MZx) tell us this executable is in PE format (as opposed to something like ELF on Linux or Mach-O on Darwin), its also a 32-bit binary. 
 
-3. Are there any results from submitting the SHA256 hash to VirusTotal?
+* Are there any results from submitting the SHA256 hash to VirusTotal?
 
 VirusTotal is a website where people submit hashes of malware samples in the wild. It helps researchers and AV companies quickly share signatures, which helps AV develop rules against novel malware more quickly.
 
@@ -49,19 +49,19 @@ Lets submit our hash to VT and see what we get:
 
 We have many hits. Keep in mind, this might not always be the case. This particular sample is well known since many people have followed this lab and submitted the same sample.
 
-4. Describe the results of pulling the strings from this binary. Record and describe any strings that are potentially interesting. Can any interesting information be extracted from the strings?
+* Describe the results of pulling the strings from this binary. Record and describe any strings that are potentially interesting. Can any interesting information be extracted from the strings?
 
 Strings contained within a binary can often help us gleam some info about its mechanism of attack. On the simpler end, there are `FLOSS.exe` and the built in `strings` command...but the ouput of that can be extremely messy. For this task, I'd rather use PEStudio.
 
 Most of it just seems like what you would expect...strings that the program would use normally. I can't really find any identifiers...all the URLs seem to be official ones.
 
-5. Describe the results of inspecting the `IAT` for this binary. Are there any imports worth noting?
+* Describe the results of inspecting the `IAT` for this binary. Are there any imports worth noting?
 
 I'll continue to use `PEStudio` for this question. The `IAT` stands for `Import Address Table`. Its how the binary knows the addresses for functions it might call, functions which are located within `DLLs` it might depend on.
 
 I saw some stuff relating to handling registry keys...but even if it wasn't malware, Putty does this normally so I wouldn't really call it an identifier.
 
-6. Is it likely that this binary is packed?
+* Is it likely that this binary is packed?
 
 When a binary is packed, it means that it has compressed hidden data inside of it, which it will extract and load into memory at runtime. Its an evasive technique, but is very easy to detect during manual analysis.
 
@@ -82,7 +82,7 @@ In this section, we'll detonate the malware sample and use various tools to trac
 > Before we start, make sure you save a snapshot of FlareVM so you can easily revert once you've detonated the sample. This allows us to have a clean slate for every detonation so that we don't contaminate our analysis.
 {: .prompt-warning}
 
-7. Describe initial detonation. Are there any notable occurances at first detonation? Without internet simulation? With internet simulation?
+* Describe initial detonation. Are there any notable occurances at first detonation? Without internet simulation? With internet simulation?
 
 Notice this question asks about internet simulation. This is why its good to have a proper environment setup for analysis, as it will make our lives easier. :)
 
@@ -102,15 +102,15 @@ We also got some interesting traffic on wireshark:
 
 ![wireshark capture]({{site.url}}/assets/img/pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-21-13.png)
 
-8. What is the DNS record that is queried at detonation?
+* What is the DNS record that is queried at detonation?
 
 It seems the malware caused a DNS request to the domain `bonus2.corporatebonusapplication.local`...
 
-9. What is the callback port number at detonation?
+* What is the callback port number at detonation?
 
 Port 8443
 
-10. What is the callback protocol at detonation?
+* What is the callback protocol at detonation?
 
 SSL/TLS
 
@@ -134,7 +134,7 @@ There it is! We can see our binary also started up powershell, which in turn sta
 
 Seems like its something that's base64 encoded, which is then decoded and ran. AKA shellcode. Its trying to load its second stage from the domain mentioned above, which means we should be able to intercept the call using our REMNux VM.
 
-11. Attempt to get the binary to initiate a shell on the localhost. Does a shell spawn? What is needed for a shell to spawn?
+* Attempt to get the binary to initiate a shell on the localhost. Does a shell spawn? What is needed for a shell to spawn?
 
 It does not...I am assuming that it fails because it can't complete the SSL handshake. Which is why it freaks out and retransmits the same packet a few times in the screenshot above.
 
