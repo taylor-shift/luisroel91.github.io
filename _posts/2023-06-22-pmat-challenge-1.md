@@ -1,7 +1,6 @@
 ---
 layout: post
 title: 'PMAT: SillyPutty'
-img_path: "assets/img/pmat-challenge-1.md_files/"
 date: 2023-06-22 20:22 -0700
 categories: [writeups]
 tags: [malware analysis, security, writeup]
@@ -27,13 +26,13 @@ Hashes serve as an easy way to 'fingerprint' malware without executing it.
 
 There are several tools to get this info...but the simplest one is sha256sum.exe:
 
-![getting sha256 hash](Screenshot from 2023-06-22 18-08-40.png)
+![getting sha256 hash](pmat-challenge-1.md_files/Screenshot from 2023-06-22 18-08-40.png)
 
 A more comprehensive one would be [PEStudio](https://www.winitor.com/), which I'll use to answer the question below.
 
 2. What architecture is this binary?
 
-![more info with PEStudio](Screenshot from 2023-06-22 18-16-46.png)
+![more info with PEStudio](pmat-challenge-1.md_files/Screenshot from 2023-06-22 18-16-46.png)
 
 The first bytes (MZx) tell us this executable is in PE format (as opposed to something like ELF on Linux or Mach-O on Darwin), its also a 32-bit binary. 
 
@@ -46,7 +45,7 @@ VirusTotal is a website where people submit hashes of malware samples in the wil
 
 Lets submit our hash to VT and see what we get:
 
-![VT Results](Screenshot from 2023-06-22 18-27-07.png)
+![VT Results](pmat-challenge-1.md_files/Screenshot from 2023-06-22 18-27-07.png)
 
 We have many hits. Keep in mind, this might not always be the case. This particular sample is well known since many people have followed this lab and submitted the same sample.
 
@@ -70,7 +69,7 @@ How can we tell?
 
 The binary is divided into different sections (.text, .rsrc for example)
 
-![binary sections](Screenshot from 2023-06-22 18-57-14.png)
+![binary sections](pmat-challenge-1.md_files/Screenshot from 2023-06-22 18-57-14.png)
 
 Notice the virtual-size and raw-size properties...if you notice a large difference between these two values for any table (but in particular for the .text section, it contains the code in a binary), it would be worth further investigation because the binary might be packed.
 
@@ -89,11 +88,11 @@ Notice this question asks about internet simulation. This is why its good to hav
 
 Run `inetsim` on your REMNux machine:
 
-![inetsim screen](Screenshot from 2023-06-22 19-11-03.png)
+![inetsim screen](pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-11-03.png)
 
 Now go to your FlareVM machine and set its DNS to the IP of your REMNux machine. You can do so in control panel -> network and sharing center -> change adapter settings:
 
-![Windows network settings](Screenshot from 2023-06-22 19-16-51.png)
+![Windows network settings](pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-16-51.png)
 
 Once you've done that, also run `wireshark` on your REMNux machine and start capturing traffic.
 
@@ -101,7 +100,7 @@ Ok...we're setup, lets detonate the sample and see what happens. On our FlareVM,
 
 We also got some interesting traffic on wireshark:
 
-![wireshark capture](Screenshot from 2023-06-22 19-21-13.png)
+![wireshark capture](pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-21-13.png)
 
 8. What is the DNS record that is queried at detonation?
 
@@ -121,17 +120,17 @@ For this we'll use Procmon from the [Sysinternals](https://learn.microsoft.com/e
 
 If we filter by process name, we get a lot of results:
 
-![procmon](Screenshot from 2023-06-22 19-41-57.png)
+![procmon](pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-41-57.png)
 
 Most of this isn't anything out of the ordinary...except it opened and closed a lot of different threads, all under the same PID...This could mean that it opened sub-processes.
 
 Let's check the process tree to see what opened up at the same time:
 
-![process tree](Screenshot from 2023-06-22 19-44-54.png)
+![process tree](pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-44-54.png)
 
 There it is! We can see our binary also started up powershell, which in turn started a host process...more interestingly is that we can see the command being ran:
 
-![shellcode](Screenshot from 2023-06-22 19-47-00.png)
+![shellcode](pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-47-00.png)
 
 Seems like its something that's base64 encoded, which is then decoded and ran. AKA shellcode. Its trying to load its second stage from the domain mentioned above, which means we should be able to intercept the call using our REMNux VM.
 
@@ -145,7 +144,7 @@ Lets run an `ncat` listener in SSL mode using REMNux to 'catch' the shell:
 
 Then run the malware again, if our assumptions are correct, we'll catch a shell:
 
-![caught a shell](Screenshot from 2023-06-22 20-13-02.png)
+![caught a shell](pmat-challenge-1.md_files/Screenshot from 2023-06-22 20-13-02.png)
 
 I hope this basic intro to malware analysis has been fun to follow along with!
 
