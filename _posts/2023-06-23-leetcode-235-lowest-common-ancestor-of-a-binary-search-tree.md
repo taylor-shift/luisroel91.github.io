@@ -42,9 +42,9 @@ class Solution:
         # Recursive util
         def go(root):
 			# Base Case
-            # If we reach the end of the list, return None
+            # If we reach the end of the list (when root is None), return None
             if not root:
-                return None
+                return root
 			
 			# Recursive Case
             # If the current node's value is larger than max_val
