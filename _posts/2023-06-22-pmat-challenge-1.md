@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 'PMAT: SillyPutty'
-img_path: "/img/pmat-challenge-1.md_files/"
+img_path: "assets/img/pmat-challenge-1.md_files/"
 date: 2023-06-22 20:22 -0700
 categories: [writeups]
 tags: [malware analysis, security, writeup]
