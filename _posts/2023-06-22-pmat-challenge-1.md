@@ -5,13 +5,13 @@ date: 2023-06-22 20:22 -0700
 categories: [writeups]
 tags: [malware analysis, security, writeup]
 ---
-I've been taking [TCM's](https://academy.tcm-sec.com/) practical malware analysis and triage course, extremely fun and interesting so far. 
+I've been taking [TCM's](https://academy.tcm-sec.com/) practical malware analysis and triage course, extremely fun and interesting so far.
 
 This is a little writeup I'm doing for the first challenge called SillyPutty.
 
 Just a heads up...this is live malware we'll be dealing with. If you'd like to follow along with this post, you can access the lab materials [here](https://github.com/HuskyHacks/PMAT-labs/).
 
-> Please make ABSOLUTELY SURE you are not running malware on your own machine, outside of a proper environment! Setup [FlareVM](https://github.com/mandiant/flare-vm) and [REMnux](each on their own VM) and only connect them to each other in an isolated network. This post is for informational purposes only. You are responsible for your own actions.
+> Please make ABSOLUTELY SURE you are not running malware on your own machine, outside of a proper environment! Setup [FlareVM](https://github.com/mandiant/flare-vm) and [REMnux](https://remnux.org/)(each on their own VM) and only connect them to each other in an isolated network. This post is for informational purposes only. You are responsible for your own actions.
 {: .prompt-danger}
 
 After you extract the malware, you'll see the executable is called `putty.exe`...it is masquerading as putty, a popular ssh client.
