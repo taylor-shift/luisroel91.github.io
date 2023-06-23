@@ -68,9 +68,12 @@ class Solution:
 
 Now, you might ask yourself. Why is it that we don't ever update the min or max as we go through the tree?
 
-Remember the properties of a binary search tree. All nodes to the right of the current node are larger than the current node. All nodes to the left, smaller.
+Remember the properties of a binary search tree. 
 
-We exploit this property using `DFS` above. Hope this was helpful!
+> In a `BST` or binary search tree, all nodes to the right of the current node are larger than the current node. All nodes to the left, smaller.
+{: .prompt-tip}
+
+We exploit this property using `DFS`/binary search above. Hope this was helpful!
 
 Be excellent to each other,
 * L
