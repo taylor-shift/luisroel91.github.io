@@ -58,7 +58,7 @@ class Solution:
                 # Return result of recursing to right
                 return go(root.right)
 
-            # At the very end, the only node returned should be between p and q
+            # At the very end, the only node returned should be between the nodes holding p and q
             # which means it is the LCA
             return root
         
