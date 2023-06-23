@@ -9,9 +9,11 @@ I've been taking [TCM's](https://academy.tcm-sec.com/) practical malware analysi
 
 This is a little writeup I'm doing for the first challenge called SillyPutty.
 
-Just a heads up...this is live malware we'll be dealing with. If you'd like to follow along with this post, you can access the lab materials [here](https://github.com/HuskyHacks/PMAT-labs/).
+If you'd like to follow along with this post, you can access the lab materials [here](https://github.com/HuskyHacks/PMAT-labs/).
 
-> Please make ABSOLUTELY SURE you are not running malware on your own machine, outside of a proper environment! Setup [FlareVM](https://github.com/mandiant/flare-vm) and [REMnux](https://remnux.org/)(each on their own VM) and only connect them to each other in an isolated network. This post is for informational purposes only. You are responsible for your own actions.
+Just a heads up...this is live malware we'll be working with:
+
+> Please make ABSOLUTELY SURE you are not running malware on your own machine, outside of a proper environment! Setup [FlareVM](https://github.com/mandiant/flare-vm) and [REMnux](https://remnux.org/) (each on their own VM) and only connect them to each other in an isolated network. This post is for informational purposes only. You are responsible for your own actions.
 {: .prompt-danger}
 
 After you extract the malware, you'll see the executable is called `putty.exe`...it is masquerading as putty, a popular ssh client.
@@ -51,13 +53,13 @@ We have many hits. Keep in mind, this might not always be the case. This particu
 
 * Describe the results of pulling the strings from this binary. Record and describe any strings that are potentially interesting. Can any interesting information be extracted from the strings?
 
-Strings contained within a binary can often help us gleam some info about its mechanism of attack. On the simpler end, there are `FLOSS.exe` and the built in `strings` command...but the ouput of that can be extremely messy. For this task, I'd rather use PEStudio.
+Strings contained within a binary can often help us gleam some info about its mechanism of attack. On the simpler end, there are `FLOSS.exe` and the built in `strings` command...but the ouput of that can be messy. For this task, I'd rather use PEStudio.
 
 Most of it just seems like what you would expect...strings that the program would use normally. I can't really find any identifiers...all the URLs seem to be official ones.
 
 * Describe the results of inspecting the `IAT` for this binary. Are there any imports worth noting?
 
-I'll continue to use `PEStudio` for this question. The `IAT` stands for `Import Address Table`. Its how the binary knows the addresses for functions it might call, functions which are located within `DLLs` it might depend on.
+I'll continue to use `PEStudio` for this question. `IAT` stands for `Import Address Table`. Its how the binary knows the addresses for functions it might call, functions which are located within `DLLs` the binary depends on.
 
 I saw some stuff relating to handling registry keys...but even if it wasn't malware, Putty does this normally so I wouldn't really call it an identifier.
 
@@ -69,9 +71,11 @@ How can we tell?
 
 The binary is divided into different sections (.text, .rsrc for example)
 
+We can observe the following in PEStudio:
+
 ![binary sections]({{site.url}}/assets/img/pmat-challenge-1.md_files/Screenshot from 2023-06-22 18-57-14.png)
 
-Notice the virtual-size and raw-size properties...if you notice a large difference between these two values for any table (but in particular for the .text section, it contains the code in a binary), it would be worth further investigation because the binary might be packed.
+Notice the virtual-size and raw-size properties...if you notice a large difference between these two values for any table (but in particular for the .text section, where code is contained in a binary), it would be worth further investigation because the binary might be packed with something malicious.
 
 ## Basic Dynamic Analysis
 
@@ -96,7 +100,9 @@ Now go to your FlareVM machine and set its DNS to the IP of your REMNux machine.
 
 Once you've done that, also run `wireshark` on your REMNux machine and start capturing traffic.
 
-Ok...we're setup, lets detonate the sample and see what happens. On our FlareVM, all we saw was a blue screen that popped up for a split second and then a regular putty window...that blue screen looked to me like a Poweshell terminal.
+Ok...we're setup, lets detonate the sample and see what happens.
+
+On our FlareVM, all we saw was a blue screen that popped up for a split second and then a regular putty window...that blue screen looked like a Poweshell terminal.
 
 We also got some interesting traffic on wireshark:
 
@@ -122,7 +128,7 @@ If we filter by process name, we get a lot of results:
 
 ![procmon]({{site.url}}/assets/img/pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-41-57.png)
 
-Most of this isn't anything out of the ordinary...except it opened and closed a lot of different threads, all under the same PID...This could mean that it opened sub-processes.
+Most of this isn't anything out of the ordinary...but it did open and close a lot of different threads, all under the same PID...This could mean that it opened sub-processes.
 
 Let's check the process tree to see what opened up at the same time:
 
@@ -132,7 +138,9 @@ There it is! We can see our binary also started up powershell, which in turn sta
 
 ![shellcode]({{site.url}}/assets/img/pmat-challenge-1.md_files/Screenshot from 2023-06-22 19-47-00.png)
 
-Seems like its something that's base64 encoded, which is then decoded and ran. AKA shellcode. Its trying to load its second stage from the domain mentioned above, which means we should be able to intercept the call using our REMNux VM.
+Seems like its something that's base64 encoded, which is then decoded and ran. AKA shellcode. 
+
+Its trying to "phone home" to the domain mentioned above, which means we should be able to intercept the call using our REMNux VM.
 
 * Attempt to get the binary to initiate a shell on the localhost. Does a shell spawn? What is needed for a shell to spawn?
 
@@ -142,13 +150,15 @@ Lets run an `ncat` listener in SSL mode using REMNux to 'catch' the shell:
 
 `ncat -nvlp 8443 --ssl`
 
-Then run the malware again, if our assumptions are correct, we'll catch a shell:
+Then run the malware again. 
+
+If our assumptions are correct, we'll catch a shell:
 
 ![caught a shell]({{site.url}}/assets/img/pmat-challenge-1.md_files/Screenshot from 2023-06-22 20-13-02.png)
 
 I hope this basic intro to malware analysis has been fun to follow along with!
 
-See you soon,
+Be excellent to each other,
 - L
 
 
