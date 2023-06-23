@@ -18,7 +18,7 @@ Since I'm doing Leetcode daily, I though it'd be cool to start doing writeups on
 
 What does this mean exactly? 
 
-In plain English, it means that we must figure out the which of p and q is the largest (max), as well as the smallest (min). Then, we must search the tree and return the node between the nodes that hold these values.
+In plain English, it means that we must figure out which (out of p and q) is the largest (max), as well as the smallest (min). Then, we must search the tree and return the node between the nodes that hold these values.
 
 A visual example:
 
