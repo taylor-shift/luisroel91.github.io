@@ -53,13 +53,15 @@ We have many hits. Keep in mind, this might not always be the case. This particu
 
 * Describe the results of pulling the strings from this binary. Record and describe any strings that are potentially interesting. Can any interesting information be extracted from the strings?
 
-Strings contained within a binary can often help us gleam some info about its mechanism of attack. On the simpler end, there are `FLOSS.exe` and the built in `strings` command...but the ouput of that can be messy. For this task, I'd rather use PEStudio.
+Strings contained within a binary can often help us gleam some info about its mechanism of attack. On the simpler end, there are `FLOSS.exe` and the built in `strings` command...but the ouput of that can be messy. 
+
+For this task, I'd rather use PEStudio. A swiss army knife for analyzing Windows (PE) binaries.
 
 Most of it just seems like what you would expect...strings that the program would use normally. I can't really find any identifiers...all the URLs seem to be official ones.
 
 * Describe the results of inspecting the `IAT` for this binary. Are there any imports worth noting?
 
-I'll continue to use `PEStudio` for this question. `IAT` stands for `Import Address Table`. Its how the binary knows the addresses for functions it might call, functions which are located within `DLLs` the binary depends on.
+`IAT` stands for `Import Address Table`. Its how the binary knows the addresses for functions it might call, functions which are located within `DLLs` the binary depends on.
 
 I saw some stuff relating to handling registry keys...but even if it wasn't malware, Putty does this normally so I wouldn't really call it an identifier.
 
@@ -79,9 +81,13 @@ Notice the virtual-size and raw-size properties...if you notice a large differen
 
 ## Basic Dynamic Analysis
 
-Ok, here is where things get a bit more interesting (imo).
+Ok, here is where things get a bit more interesting.
 
 In this section, we'll detonate the malware sample and use various tools to trace its behavior.
+
+Remember, detonating malware irresponsibly can have severe consequences. 
+
+Have fun, learn...but dont "blow yourself up". 
 
 > Before we start, make sure you save a snapshot of FlareVM so you can easily revert once you've detonated the sample. This allows us to have a clean slate for every detonation so that we don't contaminate our analysis.
 {: .prompt-warning}
