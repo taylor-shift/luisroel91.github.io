@@ -18,7 +18,9 @@ Since I'm doing Leetcode daily, I though it'd be cool to start doing writeups on
 
 What does this mean exactly? 
 
-In plain English, it means that we must figure out the largest (max) value in the tree, as well as the smallest (min) value. Then, we must return the node between the nodes that hold the min/max values for the tree.
+In plain English, it means that we must figure out the which of p and q is the largest (max), as well as the smallest (min). Then, we must search the tree and return the node between the nodes that hold these values.
+
+A visual example:
 
 ![lca example]({{site.url}}/assets/img/leetcode-235-lowest-common-ancestor-of-a-binary-search-tree.md_files/Screenshot from 2023-06-23 13-02-14.png)
 
