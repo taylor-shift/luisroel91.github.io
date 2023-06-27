@@ -13,7 +13,7 @@ Recently, I've decided to go back to school and earn my degree. Even after seven
 
 An inevitable part of this journey seems to be learning Java. This was something I was not particularly looking forward to... However, (surprise, heh) I've found that the language isn't as bad as everyone says.
 
-The final assignment in my "Intro to Java" course was to create a program to solve a basic, yet "real world" problem. To that end, I created a simple terminal-based note-taking program, available here.
+The final assignment in my "Intro to Java" course was to create a program to solve a basic, yet "real world" problem. To that end, I created a simple terminal-based note-taking program, available [here](https://replit.com/@LuisRoel1/Java-TouchStone-NotebookApp).
 
 Of course, writing a simple note-taking app isn't enough to understand the nuances of a language, its strengths, and weaknesses.
 
